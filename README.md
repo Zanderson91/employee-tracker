@@ -1,127 +1,172 @@
-# employee-tracker
+# 12 SQL: Employee Tracker
 
-# Unit 12: SQL
+## Your Task
 
-## Overview
+Developers frequently have to create interfaces that allow non-developers to easily view and interact with information stored in databases. These interfaces are called **content management systems (CMS)**. Your assignment this week is to build a command-line application from scratch to manage a company's employee database, using Node.js, Inquirer, and MySQL.
 
-This week, you’ll add the final layer to your tech stack: the database. Storing and retrieving data quickly and efficiently makes databases the foundation of full-stack web applications. In this unit, you’ll learn to design a MySQL database capable of storing large amounts of data as well as the tools needed to create, read, update and delete data. You will also learn to connect your MySQL database to a Node.js application using an Express.js server. 
+Because this application won’t be deployed, you’ll also need to create a walkthrough video that demonstrates its functionality and all of the following acceptance criteria being met. You’ll need to submit a link to the video and add it to the README of your project.
 
-## Key Topics
+## User Story
 
-The following topics will be covered in this unit:
+```md
+AS A business owner
+I WANT to be able to view and manage the departments, roles, and employees in my company
+SO THAT I can organize and plan my business
+```
 
-* [MySQL Shell](https://dev.mysql.com/doc/mysql-shell/8.0/en/mysql-shell-getting-started.html)
+## Acceptance Criteria
 
-* [Creating and selecting a database](https://dev.mysql.com/doc/refman/8.0/en/creating-database.html)
+```md
+GIVEN a command-line application that accepts user input
+WHEN I start the application
+THEN I am presented with the following options: view all departments, view all roles, view all employees, add a department, add a role, add an employee, and update an employee role
+WHEN I choose to view all departments
+THEN I am presented with a formatted table showing department names and department ids
+WHEN I choose to view all roles
+THEN I am presented with the job title, role id, the department that role belongs to, and the salary for that role
+WHEN I choose to view all employees
+THEN I am presented with a formatted table showing employee data, including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to
+WHEN I choose to add a department
+THEN I am prompted to enter the name of the department and that department is added to the database
+WHEN I choose to add a role
+THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
+WHEN I choose to add an employee
+THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
+WHEN I choose to update an employee role
+THEN I am prompted to select an employee to update and their new role and this information is updated in the database 
+```
 
-* [Creating tables](https://dev.mysql.com/doc/refman/8.0/en/creating-tables.html)
+## Mock-Up
 
-* [SELECT statement](https://dev.mysql.com/doc/refman/8.0/en/select.html)
+The following video shows an example of the application being used from the command line:
 
-* [INSERT statement](https://dev.mysql.com/doc/refman/8.0/en/insert.html)
+[![A video thumbnail shows the command-line employee management application with a play button overlaying the view.](./Assets/12-sql-homework-video-thumbnail.png)](https://2u-20.wistia.com/medias/2lnle7xnpk)
 
-* [UPDATE statement](https://dev.mysql.com/doc/refman/8.0/en/update.html)
+## Getting Started
 
-* [DELETE statement](https://dev.mysql.com/doc/refman/8.0/en/delete.html)
+You’ll need to use the [MySQL2 package](https://www.npmjs.com/package/mysql2) to connect to your MySQL database and perform queries, the [Inquirer package](https://www.npmjs.com/package/inquirer) to interact with the user via the command line, and the [console.table package](https://www.npmjs.com/package/console.table) to print MySQL rows to the console.
 
-* [Connecting MySQL to Node.js app using mysql2](https://www.npmjs.com/package/mysql2)
+**Important**: You will be committing a file that contains your database credentials. Make sure that your MySQL password is not used for any other personal accounts, because it will be visible on GitHub. In upcoming lessons, you will learn how to better secure this password, or you can start researching npm packages now that could help you.
 
-* [Data types](https://dev.mysql.com/doc/refman/8.0/en/data-types.html)
+You might also want to make your queries asynchronous. MySQL2 exposes a `.promise()` function on Connections to upgrade an existing non-Promise connection to use Promises. To learn more and make your queries asynchronous, refer to the [npm documentation on MySQL2](https://www.npmjs.com/package/mysql2).
 
-* [Schemas](https://docs.oracle.com/cd/B19306_01/server.102/b14220/schema.htm)
+Design the database schema as shown in the following image:
 
-* [Seeds](https://dev.mysql.com/doc/refman/8.0/en/loading-tables.html)
+![Database schema includes tables labeled “employee,” role,” and “department.”](./Assets/12-sql-homework-demo-01.png)
 
-* [Primary keys](https://dev.mysql.com/doc/refman/8.0/en/constraint-primary-key.html)
+As the image illustrates, your schema should contain the following three tables:
 
-* [Foreign keys](https://dev.mysql.com/doc/refman/8.0/en/create-table-foreign-keys.html)
+* `department`
 
-* [Prepared statements](https://dev.mysql.com/doc/refman/8.0/en/sql-prepared-statements.html)
+    * `id`: `INT PRIMARY KEY`
 
-* [Aggregate functions](https://dev.mysql.com/doc/refman/8.0/en/aggregate-functions.html)
+    * `name`: `VARCHAR(30)` to hold department name
 
-* [Joins](https://dev.mysql.com/doc/refman/8.0/en/join.html)
+* `role`
 
-## Learning Objectives
+    * `id`: `INT PRIMARY KEY`
 
-You will be employer-ready if you are able to:
+    * `title`: `VARCHAR(30)` to hold role title
 
-* Use MySQL Shell to execute commands.
+    * `salary`: `DECIMAL` to hold role salary
 
-* Create a database schema.
+    * `department_id`: `INT` to hold reference to department role belongs to
 
-* Seed a database for use in application development.
+* `employee`
 
-* Perform CRUD functions using MySQL commands.
+    * `id`: `INT PRIMARY KEY`
 
-* Specify the relationship between tables using primary and foreign keys.
+    * `first_name`: `VARCHAR(30)` to hold employee first name
 
-* Write a SQL query that joins two tables together.
+    * `last_name`: `VARCHAR(30)` to hold employee last name
 
-* Implement `?` prepared statements in conjunction with `INSERT`, `UPDATE`, and `DELETE`
+    * `role_id`: `INT` to hold reference to employee role
 
-* Perform a calculation on a set of values using aggregate functions.
+    * `manager_id`: `INT` to hold reference to another employee that is the manager of the current employee (`null` if the employee has no manager)
 
-## Technical Interview Preparation
+You might want to use a separate file that contains functions for performing specific SQL queries you'll need to use. A constructor function or class could be helpful for organizing these. You might also want to include a `seeds.sql` file to pre-populate your database, making the development of individual features much easier.
 
-You will be employer-competitive if you are able to solve the following algorithms and successfully complete the assessments.
+## Bonus
 
-### Algorithms
+Try to add some additional functionality to your application, such as the ability to do the following:
 
-Practicing algorithm-based interview questions is one of the best ways to prepare for interviews. Watch the `📹 Let's Code` video(s) for tips and tricks on how to solve the algorithm.
+* Update employee managers.
 
-* [01: Multiply Into 20](./03-Algorithms/01-multiply-into-20)
+* View employees by manager.
 
-  * 📹 [Let's Code Multiply Into 20!](https://2u-20.wistia.com/medias/joflnt5aqv)
+* View employees by department.
 
-* [02: Zeroes and Ones](./03-Algorithms/02-zeroes-and-ones)
+* Delete departments, roles, and employees.
 
-* [03: Merge Sorted](./03-Algorithms/03-merge-sorted)
+* View the total utilized budget of a department&mdash;in other words, the combined salaries of all employees in that department.
 
-### Assessments
+## Grading Requirements
 
-Assess your knowledge by answering technical interview questions and solving coding challenges.
+This homework is graded based on the following criteria:
 
-* [12-SQL Technical Interview Questions](https://forms.gle/iURNKwybewENCnS76)
+### Deliverables: 10%
 
-## Homework
+* Your GitHub repository containing your application code.
 
-Developers frequently have to create interfaces that allow non-developers to easily view and interact with information stored in databases. These interfaces are called **content management systems (CMS)**. Your assignment this week is to build a command-line application from scratch to manage a company's employee database, using Node.js, Inquirer, and MySQL2.
+### Walkthrough Video: 27%
 
-## Career Connection
+* A walkthrough video that demonstrates the functionality of the employee tracker must be submitted, and a link to the video should be included in your README file.
 
-Career Services material for this unit is located in the [Career Connection folder](./04-Career-Connection/README.md). For more information about Career Services, including coding milestones, demo days, technical toolkits, workshops, and additional resources, visit the [Career Services website](https://mycareerspot.org/).
+* The walkthrough video must show all of the technical acceptance criteria being met.
 
-## Heads-Up
+* The walkthrough video must demonstrate how a user would invoke the application from the command line.
 
-In the next unit, you will learn to use Sequelize, an object-relational mapping (ORM) library, to simplify your MySQL queries and easily handle data in a full-stack app.
+* The walkthrough video must demonstrate a functional menu with the options outlined in the acceptance criteria.
 
-## Resources
+### Technical Acceptance Criteria: 40%
 
-Here are some additional resources to help solidify the topics covered in this unit.
+* Satisfies all of the preceding acceptance criteria plus the following:
 
-### Git Guide
+    * Uses the [Inquirer package](https://www.npmjs.com/package/inquirer).
 
-Refer to the Git Guide to review the Git concept for this unit. Watch the `📹 Git Guide` video for an additional walkthrough of the Git concept.
+    * Uses the [MySQL2 package](https://www.npmjs.com/package/mysql2) to connect to a MySQL database.
 
-  * 📖 [Git Guide: Git Cherry-Pick](./01-Activities/27-Evr_Git-Cherry-Picking/README.md) 
+    * Uses the [console.table package](https://www.npmjs.com/package/console.table) to print MySQL rows to the console.
 
-  * 📹 [Git Guide Video: Git Cherry-Pick](https://2u-20.wistia.com/medias/wkipdjl81o)
+* Follows the table schema outlined in the homework instructions.
 
-### Full-Stack Blog Posts
+### Repository Quality: 13%
 
-Check out the [Full-Stack Blog](https://coding-boot-camp.github.io/full-stack/) for additional resources, like walkthroughs, articles, and installation guides.
+* Repository has a unique name.
 
-  * 📖 Blog Post: [MySQL Installation Guide](https://coding-boot-camp.github.io/full-stack/mysql/mysql-installation-guide)
+* Repository follows best practices for file structure and naming conventions.
 
-  * 📖 Blog Post: [MySQL Reference Guide](https://coding-boot-camp.github.io/full-stack/mysql/mysql-reference-guide)
+* Repository follows best practices for class/id naming conventions, indentation, quality comments, etc.
 
-  * 📖 Blog Post: [Deploy with Heroku and MySQL](https://coding-boot-camp.github.io/full-stack/heroku/deploy-with-heroku-and-mysql)
+* Repository contains multiple descriptive commit messages.
 
-### General
+* Repository contains a high-quality README with description and a link to a walkthrough video.
 
-Refer to these resources for additional information about topics covered in this unit.
+### Application Quality 10%
 
-  * 📖 [MySQL documentation on getting started](https://dev.mysql.com/doc/mysql-getting-started/en/)
-  
-  * 📖 [npm documentation on MySQL2](https://www.npmjs.com/package/mysql2)
+* The application user experience is intuitive and easy to navigate.
+
+### Bonus
+
+Fulfilling any of the following can add up to 20 points to your grade. Note that the highest grade you can achieve is still 100:
+
+* Application allows users to update employee managers (2 points).
+
+* Application allows users to view employees by manager (2 points).
+
+* Application allows users to view employees by department (2 points).
+
+* Application allows users to delete departments, roles, and employees (2 points for each).
+
+* Application allows users to view the total utilized budget of a department&mdash;in other words, the combined salaries of all employees in that department (8 points).
+
+## Review
+
+You are required to submit BOTH of the following for review:
+
+* A walkthrough video demonstrating the functionality of the application.
+
+* The URL of the GitHub repository, with a unique name and a README describing the project.
+
+- - -
+© 2021 Trilogy Education Services, LLC, a 2U, Inc. brand. Confidential and Proprietary. All Rights Reserved.
