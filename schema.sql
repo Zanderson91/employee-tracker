@@ -1,0 +1,11 @@
+--CREATE THE DATABASE
+
+DROP DATABASE IF EXISTS employee_db;
+CREATE DATABASE IF NOT EXISTS employee_db;
+USE employee_db;
+
+--Need Department
+CREATE TABLE department (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(30)
+);
