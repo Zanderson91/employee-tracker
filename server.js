@@ -41,3 +41,61 @@ function startPrompt() {
 
 
 //Action to see all employees/view the directory
+app.get('/api/role', (req, res) => {
+    // Query database
+    db.query('SELECT * FROM employee', function (err, results) {
+        console.log(results);
+        res.json(results);
+    });
+});
+
+//Action to update employee
+app.put('/api/update-employee/:id', (req, res) => {
+    const {
+        movie_name
+    } = req.body;
+
+    const query = `
+    UPDATE employee
+    SET employee = ?
+    WHERE role_id = ?
+    `;
+    const q = db.query(
+        query,
+        [first_name, last_name, req.params.role_id],
+        function (err, results) {
+            res.json(results);
+        }
+    );
+    console.log(q.sql);
+});
+
+//Route to add new role
+app.post('/api/add-role', (req, res) => {
+    const {
+        role,
+    } = req.body;
+
+    const query = `
+    INSERT INTO role (role)
+    VALUES (?)
+    `;
+    db.query(query, role, function (err, results) {
+        res.json(results);
+    });
+});
+
+//Route to add new department
+app.post('/api/add-department', (req, res) => {
+    const {
+        department,
+    } = req.body;
+
+    const query = `
+    INSERT INTO department (department)
+    VALUES (?)
+    `;
+    db.query(query, department, function (err, results) {
+        res.json(results);
+    });
+});
