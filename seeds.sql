@@ -40,4 +40,6 @@ VALUE ("Josh", "Cobos", 3, 3);
 INSERT INTO employee (first_name, last_name, manager_id, role_id)
 VALUE ("John", "Cobos", null, 3);
 
-
+SELECT * FROM department;
+SELECT * FROM role;
+SELECT * FROM employee;
