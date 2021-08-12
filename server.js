@@ -96,7 +96,7 @@ function viewRoles() {
 
 function viewDepartments() {
     db.query("SELECT employee.first_name, employee.last_name, department.name AS Department FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id ORDER BY employee.id;",
-        function (err, res) {
+        function (req, res) {
             console.table(res)
             startPrompt()
         })
@@ -205,7 +205,7 @@ function addDepartment() {
 
 
 
-
+//Original thoughts for different calls....
 /*
 //Action to see all employees/view the directory
 app.get('/api/role', (req, res) => {
