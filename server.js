@@ -5,6 +5,7 @@ const express = require('express');
 const cTable = require('console.table');
 const dotenv = require('dotenv');
 const app = express();
+const Role = require("./lib/Role");
 
 
 app.use(express.urlencoded({
@@ -31,6 +32,7 @@ db.connect(function (err) {
 
 //Command line prompt for viewing DB
 function startPrompt() {
+    //const role = new Role();
     inquirer.prompt([{
             type: "list",
             message: "What would you like to do?",
@@ -124,6 +126,10 @@ function addRole() {
             )
         });
     });
+}
+
+function updateEmployee() {
+    db.query()
 }
 
 
