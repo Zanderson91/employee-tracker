@@ -35,11 +35,31 @@ function startPrompt() {
                 "Add Department"
             ]
         }
-    ])
+//functions to view directory/role/department/update employee/add role/add department
+    ]).then(function(val) {
+        switch (val.choice) {
+            case "View employee directory":
+                viewDirectory();
+            break;
+
+            
+            case "View directory by role":
+                viewRoles();
+            break;
+        }
+    }
 }
 
 
 
+
+
+
+
+
+
+
+/*
 //Action to see all employees/view the directory
 app.get('/api/role', (req, res) => {
     // Query database
