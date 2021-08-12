@@ -7,7 +7,9 @@ const dotenv = require('dotenv');
 const app = express();
 
 
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({
+    extended: false
+}));
 app.use(express.json());
 
 
@@ -89,6 +91,30 @@ function viewRoles() {
         })
 }
 
+function viewDepartments() {
+    db.query("SELECT employee.first_name, employee.last_name, department.name AS Department FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id ORDER BY employee.id;",
+        function (err, res) {
+            console.table(res)
+            startPrompt()
+        })
+}
+
+function addRole() {
+    db.query("SELECT role.title AS Title, role.salary AS Salary FROM role", function(req, res) {
+
+    inquirer.prompt([
+        {
+        name: "Title",
+        type: "input",
+        message: "What is the new role?"
+        },
+        {
+        name: "Salary",
+        type: "input",
+        message: "What is the salary of the role?"
+
+        }
+}
 
 
 
