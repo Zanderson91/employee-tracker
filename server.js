@@ -12,10 +12,10 @@ app.use(express.json());
 
 require('dotenv').config();
 const db = mysql.createConnection({
-        HOST: process.env.HOST || 'localhost',
-        PORT: process.env.PORT || 3001,
-        USERNAME: process.env.USERNAME || 'root',
-        PASSWORD: process.env.PASSWORD || '',
+        host: process.env.HOST || 'localhost',
+        port: process.env.PORT || 3306,
+        user: process.env.USER || 'root',
+        password: process.env.PASSWORD || '',
         database: process.env.DATABASE || "employee_db"
     },
     console.log(`Connected to the employee_db database.`)
