@@ -2,18 +2,20 @@ const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const PORT = process.env.PORT || 3001;
 
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({
+    extended: false
+}));
 app.use(express.json());
 
 
 const connection = mysql.createConnection({
-    HOST: "localhost",
-    PORT: process.env || 3001,
-    USERNAME: 'root',
-    PASSWORD: '',
-    database: "employee_db"
-},
-console.log(`Connected to the employee_db database.`)
+        HOST: "localhost",
+        PORT: process.env || 3001,
+        USERNAME: 'root',
+        PASSWORD: '',
+        database: "employee_db"
+    },
+    console.log(`Connected to the employee_db database.`)
 );
 
 
@@ -21,8 +23,7 @@ console.log(`Connected to the employee_db database.`)
 
 //Command line prompt for viewing DB
 function startPrompt() {
-    inquirer.prompt([
-        {
+    inquirer.prompt([{
             type: "list",
             message: "What would you like to do?",
             name: "choice",
@@ -35,19 +36,43 @@ function startPrompt() {
                 "Add Department"
             ]
         }
-//functions to view directory/role/department/update employee/add role/add department
-    ]).then(function(val) {
+        //functions to view directory/role/department/update employee/add role/add department
+    ]).then(function (val) {
         switch (val.choice) {
             case "View employee directory":
                 viewDirectory();
-            break;
+                break;
 
-            
+
             case "View directory by role":
                 viewRoles();
-            break;
+                break;
+
+            case "View directory by department":
+                viewDepartments();
+                break;
+
+            case "Update Employee":
+                updateEmployee();
+                break;
+
+            case "Add Role":
+                addRole();
+                break;
+
+            case "Add Department":
+                addDepartment();
+                break
         }
-    }
+    })
+}
+
+function viewDirectory() {
+    connection.query("SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name, CONCAT(e.first_name, ' ', e.last_name) AS Manager FROM employee INNER JOIN role on role.id = employee.role_id INNER JOIN department on department.id = role.department_id left join employee e on employee.manager_id = e.id;",
+        function (req, res) {
+            if (err) throw (err)
+            startPrompt()
+        })
 }
 
 
