@@ -100,20 +100,30 @@ function viewDepartments() {
 }
 
 function addRole() {
-    db.query("SELECT role.title AS Title, role.salary AS Salary FROM role", function(req, res) {
-
-    inquirer.prompt([
-        {
-        name: "Title",
-        type: "input",
-        message: "What is the new role?"
-        },
-        {
-        name: "Salary",
-        type: "input",
-        message: "What is the salary of the role?"
-
-        }
+    db.query("SELECT role.title AS Title, role.salary AS Salary FROM role", function (req, res) {
+        inquirer.prompt([{
+                name: "Title",
+                type: "input",
+                message: "What is the new role?"
+            },
+            {
+                name: "Salary",
+                type: "input",
+                message: "What is the salary of the role?"
+            }
+        ]).then(function (res) {
+            db.query("INSERT INTO role SET ?", {
+                    title: res.Title,
+                    salary: res.Salary,
+                },
+                function (err) {
+                    if (err) throw err;
+                    console.table(res);
+                    startPrompt();
+                }
+            )
+        });
+    });
 }
 
 
