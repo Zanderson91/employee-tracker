@@ -5,7 +5,7 @@ const express = require('express');
 const cTable = require('console.table');
 const dotenv = require('dotenv');
 const app = express();
-const Role = require("./lib/Role");
+const Role = require("./lib/Role.js");
 
 
 app.use(express.urlencoded({
@@ -34,6 +34,7 @@ db.connect(function (err) {
 function startPrompt() {
     //const role = new Role();
     inquirer.prompt([{
+        
             type: "list",
             message: "What would you like to do?",
             name: "choice",
@@ -176,7 +177,26 @@ function updateEmployee() {
     });
 }
 
-
+function addDepartment() {
+    inquirer.prompt([
+        {
+            name: "name",
+            type:"input",
+            message: "What department are you adding?"
+        }
+    ]).then (function(res) {
+        let query = db.query(
+            "INSERT INTO department SET ?",
+            {
+                name: res.name
+            },
+            function(err) {
+            console.table(res)
+            startPrompt();
+            }
+        )
+    })
+}
 
 
 
