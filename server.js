@@ -2,28 +2,26 @@ const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const PORT = process.env.PORT || 3001;
 const express = require('express');
-
+const dotenv = require('dotenv');
 
 const app = express();
+dotenv.config({ path: './.env'});
 
 
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 
 
-async function getConnection()
-{
-const connection = await mysql.createConnection({
-        HOST: "localhost",
-        PORT: process.env || 3001,
+
+const connection = mysql.createConnection({
+        HOST: process.env.HOST || 'localhost',
+        PORT: process.env.PORT || 3001,
         USERNAME: process.env.USERNAME || 'root',
         PASSWORD: process.env.PASSWORD || '',
         database: process.env.DATABASE || "employee_db"
     },
     console.log(`Connected to the employee_db database.`)
 );
-return connection;
-}
 
 
 //Command line prompt for viewing DB

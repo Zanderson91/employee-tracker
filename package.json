@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/Zanderson91/employee-tracker#readme",
   "dependencies": {
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "inquirer": "^8.1.2",
     "mysql2": "^2.3.0",
