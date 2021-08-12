@@ -1,25 +1,30 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const PORT = process.env.PORT || 3001;
+const express = require('express');
 
-app.use(express.urlencoded({
-    extended: false
-}));
+
+const app = express();
+
+
+app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 
 
-const connection = mysql.createConnection({
+async function getConnection()
+{
+const connection = await mysql.createConnection({
         HOST: "localhost",
         PORT: process.env || 3001,
-        USERNAME: 'root',
-        PASSWORD: '',
-        database: "employee_db"
+        USERNAME: process.env.USERNAME || 'root',
+        PASSWORD: process.env.PASSWORD || '',
+        database: process.env.DATABASE || "employee_db"
     },
     console.log(`Connected to the employee_db database.`)
 );
+return connection;
+}
 
-
-//Need connection for server
 
 //Command line prompt for viewing DB
 function startPrompt() {
@@ -144,3 +149,4 @@ app.post('/api/add-department', (req, res) => {
         res.json(results);
     });
 });
+*/
