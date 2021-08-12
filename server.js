@@ -81,6 +81,14 @@ function viewDirectory() {
         })
 }
 
+function viewRoles() {
+    db.query("SELECT employee.first_name, employee.last_name, role.title AS Title FROM employee JOIN role ON employee.role_id = role.id;",
+        function (req, res) {
+            console.table(res)
+            startPrompt()
+        })
+}
+
 
 
 
