@@ -128,12 +128,25 @@ function addRole() {
     });
 }
 
+let roleChoices = [];
+
+function chooseRole() {
+    db.query("SELECT * FROM role", function (req, res) {
+        for (var i = 0; i < res.length; i++) {
+            roleArr.push(res[i].title);
+        }
+
+    })
+    return roleChoices;
+}
+
 function updateEmployee() {
     db.query("SELECT employee.last_name, role.title FROM employee JOIN role ON employee.role_id = role.id;", function (req, res) {
         inquirer.prompt([
             {
                 name:"last",
-                type:"rawlist",
+                type:"list",
+                message: "What is the employee's last name?",
                 choices: function() {
                     let last = [];
                     for (var i =0; i<res.length; i++) {
@@ -141,11 +154,10 @@ function updateEmployee() {
                     }
                     return last;
                 },
-                message: "What is the employee's last name?",
             },
             {
                 name: "role",
-                type: "list",
+                type: "rawlist",
                 message: "What is the employee's title?",
                 choices: chooseRole()
             },
@@ -163,6 +175,8 @@ function updateEmployee() {
         })
     });
 }
+
+
 
 
 
