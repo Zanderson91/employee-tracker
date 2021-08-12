@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/Zanderson91/employee-tracker#readme",
   "dependencies": {
+    "console.table": "^0.10.0",
+    "ctable": "^0.0.3",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "inquirer": "^8.1.2",

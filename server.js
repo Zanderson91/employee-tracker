@@ -2,6 +2,7 @@ const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const PORT = process.env.PORT || 3001;
 const express = require('express');
+const cTable = require('console.table');
 const dotenv = require('dotenv');
 const app = express();
 
@@ -21,6 +22,10 @@ const db = mysql.createConnection({
     console.log(`Connected to the employee_db database.`)
 );
 
+db.connect(function (err) {
+    if (err) throw err
+    startPrompt();
+});
 
 //Command line prompt for viewing DB
 function startPrompt() {
@@ -69,9 +74,9 @@ function startPrompt() {
 }
 
 function viewDirectory() {
-    connection.query("SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name, CONCAT(e.first_name, ' ', e.last_name) AS Manager FROM employee INNER JOIN role on role.id = employee.role_id INNER JOIN department on department.id = role.department_id left join employee e on employee.manager_id = e.id;",
+    db.query("SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name, CONCAT(e.first_name, ' ', e.last_name) AS Manager FROM employee INNER JOIN role on role.id = employee.role_id INNER JOIN department on department.id = role.department_id left join employee e on employee.manager_id = e.id;",
         function (req, res) {
-            if (err) throw (err)
+            console.table(res)
             startPrompt()
         })
 }
