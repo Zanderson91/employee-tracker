@@ -3,6 +3,9 @@
   # Description
   This application is a mySQL database that can be initiated through command line. Data can be manipulated through command line.
 
+
+![C:\Users\zacka\projects\employee-tracker\assets\Untitled_ Aug 12, 2021 5_53 PM.gif]
+
   # Table of Contents
   - [Description](#Description)
   - [Installation](#Installation)

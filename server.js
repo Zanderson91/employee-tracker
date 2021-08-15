@@ -31,9 +31,9 @@ db.connect(function (err) {
 });
 
 //Command line prompt for viewing DB
-function startPrompt() {
+async function startPrompt() {
     //const role = new Role();
-    inquirer.prompt([{
+    const val = await inquirer.prompt([{
         
             type: "list",
             message: "What would you like to do?",
@@ -48,7 +48,7 @@ function startPrompt() {
             ]
         }
         //functions to view directory/role/department/update employee/add role/add department
-    ]).then(function (val) {
+    ])
         switch (val.choice) {
             case "View employee directory":
                 viewDirectory();
@@ -75,8 +75,7 @@ function startPrompt() {
                 addDepartment();
                 break
         }
-    })
-}
+    }
 
 function viewDirectory() {
     db.query("SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name, CONCAT(e.first_name, ' ', e.last_name) AS Manager FROM employee INNER JOIN role on role.id = employee.role_id INNER JOIN department on department.id = role.department_id left join employee e on employee.manager_id = e.id;",
@@ -129,12 +128,13 @@ function addRole() {
     });
 }
 
-let roleChoices = [];
+
 
 function chooseRole() {
+    let roleChoices = [];
     db.query("SELECT * FROM role", function (req, res) {
         for (var i = 0; i < res.length; i++) {
-            roleArr.push(res[i].title);
+            roleChoices.push(res[i].title);
         }
 
     })
@@ -143,18 +143,23 @@ function chooseRole() {
 
 function updateEmployee() {
     db.query("SELECT employee.last_name, role.title FROM employee JOIN role ON employee.role_id = role.id;", function (req, res) {
+        let last = [];
+        for (var i = 0; i < res.length; i++) {
+            last.push(res[i].last_name);
+        }
         inquirer.prompt([
             {
                 name:"last",
                 type:"list",
                 message: "What is the employee's last name?",
-                choices: function() {
-                    let last = [];
-                    for (var i =0; i<res.length; i++) {
-                        last.push(res[i].last_name);
-                    }
-                    return last;
-                },
+                // choices: function() {
+                //     let last = [];
+                //     for (var i =0; i<res.length; i++) {
+                //         last.push(res[i].last_name);
+                //     }
+                //     return last;
+                // },
+                choices: last
             },
             {
                 name: "role",
@@ -163,16 +168,26 @@ function updateEmployee() {
                 choices: chooseRole()
             },
         ]).then(function(val) {
-            let roleID = chooseRole().indexOf(val.role) + 1
-            db.query("UPDATE employee SET WHERE ?"),
-            {
-                last_name: val.last
-            },
-            {
-                role_id: roleID
-            },
-            console.table(val)
-            startPrompt()
+            console.log(val)
+            let roleID = chooseRole().indexOf(val.role)
+            roleID ++
+            console.log(roleID)
+            db.query("UPDATE employee SET role_id = ? WHERE last_name = ?",
+            [roleID, val.last],
+            // {
+            //     last_name: val.last
+            // },
+            // {
+            //     role_id: roleID
+            // },
+            function (req, res) {
+                console.log(req)
+                console.log(res)
+                console.table(val)
+                startPrompt();
+            })
+            // console.table(val)
+            // startPrompt();
         })
     });
 }
